@@ -7,7 +7,7 @@
 
 Crystal structure encoder based on pre-trained CrystalFramer models for materials property prediction and analysis.
 
-📚 [日本語ドキュメントはこちら (Japanese Documentation)](README_ja.md)
+<!-- 📚 [日本語ドキュメントはこちら (Japanese Documentation)](README_ja.md) -->
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ Crystal structure encoder based on pre-trained CrystalFramer models for material
 
 ```bash
 # Install from git
-pip install git+https://github.com/YOUR_USERNAME/crystalframer-encoder.git                          
+pip install git+https://github.com/resnant/crystalframer-encoder.git                          
 ```
 <!--todo: PyPI
 pip install crystalframer-encoder -->
@@ -34,8 +34,8 @@ pip install crystalframer-encoder -->
 import crystalframer_encoder as cfe
 from pymatgen.core import Structure, Lattice
 
-# Load pre-trained encoder
-encoder = cfe.CrystalEncoder.from_pretrained("path/to/model.ckpt")
+# Load pre-trained encoder (using formation energy model)
+encoder = cfe.CrystalEncoder.from_pretrained("./crystalframer_weight/formation_energy/best.ckpt")
 
 # Create crystal structure
 lattice = Lattice.cubic(4.0)
@@ -50,20 +50,21 @@ print(f"Embedding shape: {embedding.shape}")  # [1, 128]
 
 ### Install from PyPI (Recommended)
 
-```bash
+coming soon
+<!-- ```bash
 pip install crystalframer-encoder
-```
+``` -->
 
 ### Install from GitHub
 
 ```bash
-pip install git+https://github.com/yourusername/crystalframer-encoder.git
+pip install git+https://github.com/resnant/crystalframer-encoder.git
 ```
 
 ### Development Installation
 
 ```bash
-git clone https://github.com/yourusername/crystalframer-encoder.git
+git clone https://github.com/resnant/crystalframer-encoder.git
 cd crystalframer-encoder
 pip install -e .[dev]
 ```
@@ -78,7 +79,7 @@ docker build -t crystalframer:latest ./docker
 docker run --rm --gpus 1 -it -v $(pwd):/workspace -w /workspace crystalframer:latest bash
 
 # Install package inside container
-pip install git+https://github.com/yourusername/crystalframer-encoder.git
+pip install git+https://github.com/resnant/crystalframer-encoder.git
 # Or for development
 cd /workspace/crystalframer-encoder
 pip install -e .
@@ -93,18 +94,18 @@ pip install -e .
 ```python
 import crystalframer_encoder as cfe
 
-# Method 1: Load from checkpoint file
-encoder = cfe.CrystalEncoder.from_pretrained("/path/to/model.ckpt")
+# Method 1: Load from checkpoint file (default: formation energy model)
+encoder = cfe.CrystalEncoder.from_pretrained("crystalframer_weight/formation_energy/best.ckpt")
 
 # Method 2: Specify hparams.yaml explicitly
 encoder = cfe.CrystalEncoder.from_pretrained(
-    "/path/to/model.ckpt", 
-    hparams_path="/path/to/hparams.yaml"
+    "crystalframer_weight/formation_energy/best.ckpt", 
+    hparams_path="crystalframer_weight/formation_energy/hparams.yaml"
 )
 
 # Method 3: Override embedding dimension
 encoder = cfe.CrystalEncoder.from_pretrained(
-    "/path/to/model.ckpt", 
+    "crystalframer_weight/formation_energy/best.ckpt", 
     embedding_dim=256
 )
 
@@ -131,10 +132,8 @@ Pre-trained models can be obtained through:
 2. **Train your own**: Train on custom datasets using CrystalFramer
 
 Example pre-trained models (JARVIS dataset):
-- Formation energy prediction model
-- Optical bandgap prediction model
-
-**Note**: Large model files (.ckpt) are not included in the Git repository. They need to be downloaded separately or trained using CrystalFramer.
+- Formation energy prediction model (`crystalframer_weight/formation_energy/best.ckpt`)
+- Optical bandgap prediction model (`crystalframer_weight/opt_bandgap/best.ckpt`)
 
 ### 3. Hyperparameter Files
 
@@ -150,7 +149,7 @@ CrystalFramer Encoder automatically searches for hyperparameter files in:
 # ├── best.ckpt
 # └── hparams.yaml  # Automatically detected
 
-encoder = cfe.CrystalEncoder.from_pretrained("/path/to/model_directory/best.ckpt")
+encoder = cfe.CrystalEncoder.from_pretrained("model_directory/best.ckpt")
 ```
 
 ### 4. Training from Scratch
@@ -174,14 +173,14 @@ optimizer = torch.optim.Adam(encoder.parameters())
 After installation, the `crystalframer-encode` command becomes available:
 
 ```bash
-# Encode single structure
-crystalframer-encode structure.cif -m model.ckpt -o embeddings.npz
+# Encode single structure (using default formation energy model)
+crystalframer-encode structure.cif -m crystalframer_weight/formation_energy/best.ckpt -o embeddings.npz
 
 # Encode multiple structures
-crystalframer-encode *.cif -m model.ckpt -o embeddings.npz --batch-size 64
+crystalframer-encode *.cif -m crystalframer_weight/formation_energy/best.ckpt -o embeddings.npz --batch-size 64
 
 # Output results as JSON to stdout
-crystalframer-encode structure.cif -m model.ckpt
+crystalframer-encode structure.cif -m crystalframer_weight/formation_energy/best.ckpt
 
 # Show help
 crystalframer-encode --help
@@ -350,8 +349,6 @@ params.set('key', value)
 
 1. **Docker paths**: Always use paths starting with `/workspace/` in Docker containers
 2. **Memory usage**: Be careful with memory usage when processing large structures or batches
-3. **Device management**: Ensure proper CUDA environment for GPU usage
-4. **Dependencies**: Verify that PyTorch Geometric and pymatgen are correctly installed
 
 ## 🔧 Troubleshooting
 
@@ -359,7 +356,7 @@ params.set('key', value)
 
 1. **Path errors in Docker**
    ```
-   FileNotFoundError: Model '/mnt/data/work/...' not found.
+   FileNotFoundError: Model '/data/work/...' not found.
    ```
    → Use paths starting with `/workspace/` in Docker environment
 

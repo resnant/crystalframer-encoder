@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # Load the pretrained encoder
 print("Loading pretrained CrystalFramer encoder...")
 encoder = cfe.CrystalEncoder.from_pretrained(
-    "/workspace/crystalframer-encoder/crystalframer_weight/formation_energy/best.ckpt"
+    "./crystalframer_weight/formation_energy/best.ckpt"
 )
 print(f"Encoder loaded. Embedding dimension: {encoder.get_embedding_dim()}")
 
@@ -108,17 +108,17 @@ plt.ylabel('t-SNE 2')
 plt.title('Crystal Structure Embeddings')
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('/workspace/crystalframer-encoder/embeddings_visualization.png', dpi=300)
+plt.savefig('./embeddings_visualization.png', dpi=300)
 print("Visualization saved to embeddings_visualization.png")
 
-# Save encoder for later use
-print("\nSaving encoder...")
-encoder.save_encoder("/workspace/crystalframer-encoder/my_encoder.pth")
+# # Save encoder for later use
+# print("\nSaving encoder...")
+# encoder.save_encoder("./my_encoder.pth")
 
-# Load and test
-print("Loading saved encoder...")
-loaded_encoder = cfe.CrystalEncoder.load_encoder("/workspace/crystalframer-encoder/my_encoder.pth")
-test_embedding = loaded_encoder.encode_single(structures[0])
-print(f"Test embedding from loaded encoder: {test_embedding.shape}")
+# # Load and test
+# print("Loading saved encoder...")
+# loaded_encoder = cfe.CrystalEncoder.load_encoder("./my_encoder.pth")
+# test_embedding = loaded_encoder.encode_single(structures[0])
+# print(f"Test embedding from loaded encoder: {test_embedding.shape}")
 
-print("\nExample completed successfully!")
+# print("\nExample completed successfully!")
