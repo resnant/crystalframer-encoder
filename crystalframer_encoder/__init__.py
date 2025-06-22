@@ -9,8 +9,8 @@ from .configs.model_configs import list_available_models
 from .utils.download import download_pretrained_model, list_cached_models, clear_cache
 
 __version__ = "0.1.0"
-__author__ = "CrystalFramer Team"
-__email__ = "your-email@example.com"
+__author__ = "Yuta Suzuki"
+__email__ = "resnant@outlook.jp"
 
 # メインのエクスポート
 __all__ = [

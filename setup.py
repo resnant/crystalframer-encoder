@@ -21,12 +21,12 @@ def read_readme():
 setup(
     name="crystalframer-encoder",
     version="0.1.0",
-    author="CrystalFramer Team",
-    author_email="crystalframer@example.com",
-    description="Crystal structure encoder based on pre-trained CrystalFramer models for materials property prediction",
+    author="Yuta Suzuki",
+    author_email="resnant@outlook.jp",
+    description="Crystal structure encoder based on pre-trained CrystalFramer models",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/crystalframer-encoder",  # TODO: Update with your GitHub username
+    url="https://github.com/resnant/crystalframer-encoder",  # TODO: Update with your GitHub username
     packages=find_packages(exclude=["tests", "tests.*", "examples", "docs"]),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -64,8 +64,8 @@ setup(
     },
     keywords="crystal structure, materials science, machine learning, transformer, graph neural network, materials informatics",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/crystalframer-encoder/issues",
-        "Source": "https://github.com/yourusername/crystalframer-encoder",
+        "Bug Reports": "https://github.com/resnant/crystalframer-encoder/issues",
+        "Source": "https://github.com/resnant/crystalframer-encoder",
         "Documentation": "https://github.com/yourusername/crystalframer-encoder#readme",
         "Paper": "https://openreview.net/forum?id=gzxDjnvBDa",
     },

@@ -9,10 +9,10 @@ description = "Crystal structure encoder based on pre-trained CrystalFramer mode
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "CrystalFramer Team", email = "crystalframer@example.com"}
+    {name = "Yuta Suzuki", email = "resnant@outlook.jp"}
 ]
 maintainers = [
-    {name = "CrystalFramer Team", email = "crystalframer@example.com"}
+    {name = "Yuta Suzuki", email = "resnant@outlook.jp"}
 ]
 keywords = ["crystal structure", "materials science", "machine learning", "transformer", "graph neural network", "materials informatics", "crystallography"]
 classifiers = [
@@ -50,10 +50,10 @@ docs = ["sphinx>=4.0", "sphinx-rtd-theme>=1.0", "myst-parser>=0.18.0"]
 all = ["crystalframer-encoder[dev,docs]"]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/crystalframer-encoder"
-Repository = "https://github.com/yourusername/crystalframer-encoder"
-Documentation = "https://github.com/yourusername/crystalframer-encoder#readme"
-"Bug Reports" = "https://github.com/yourusername/crystalframer-encoder/issues"
+Homepage = "https://github.com/resnant/crystalframer-encoder"
+Repository = "https://github.com/resnant/crystalframer-encoder"
+Documentation = "https://github.com/resnant/crystalframer-encoder#readme"
+"Bug Reports" = "https://github.com/resnant/crystalframer-encoder/issues"
 Paper = "https://openreview.net/forum?id=gzxDjnvBDa"
 
 [project.scripts]
