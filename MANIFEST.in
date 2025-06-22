@@ -1,0 +1,30 @@
+include README.md
+include LICENSE
+include requirements.txt
+include pyproject.toml
+include MANIFEST.in
+
+# Include configuration files
+recursive-include crystalframer_encoder/configs *.json *.yaml *.yml
+
+# Include type hints
+include crystalframer_encoder/py.typed
+
+# Include tests
+recursive-include tests *.py
+include pytest.ini
+
+# Exclude unnecessary files
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store
+global-exclude .gitignore
+global-exclude .git
+global-exclude *.so
+global-exclude *.dylib
+
+# Exclude large model weight files
+prune crystalframer_weight
+global-exclude *.ckpt
+global-exclude *.pth
+global-exclude *.pt

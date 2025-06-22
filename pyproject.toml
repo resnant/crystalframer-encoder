@@ -1,0 +1,102 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crystalframer-encoder"
+version = "0.1.0"
+description = "Crystal structure encoder based on pre-trained CrystalFramer models for materials property prediction"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "CrystalFramer Team", email = "crystalframer@example.com"}
+]
+maintainers = [
+    {name = "CrystalFramer Team", email = "crystalframer@example.com"}
+]
+keywords = ["crystal structure", "materials science", "machine learning", "transformer", "graph neural network", "materials informatics", "crystallography"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=1.12.0",
+    "torch-geometric>=2.0.0",
+    "pymatgen>=2022.0.0",
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+    "scikit-learn>=1.0.0",
+    "tqdm>=4.60.0",
+    "requests>=2.25.0",
+    "pyyaml>=5.4.0",
+    "huggingface-hub>=0.10.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=6.0", "black>=22.0", "flake8>=4.0", "mypy>=0.950", "isort>=5.0", "pre-commit>=2.20.0", "pytest-cov>=3.0"]
+docs = ["sphinx>=4.0", "sphinx-rtd-theme>=1.0", "myst-parser>=0.18.0"]
+all = ["crystalframer-encoder[dev,docs]"]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/crystalframer-encoder"
+Repository = "https://github.com/yourusername/crystalframer-encoder"
+Documentation = "https://github.com/yourusername/crystalframer-encoder#readme"
+"Bug Reports" = "https://github.com/yourusername/crystalframer-encoder/issues"
+Paper = "https://openreview.net/forum?id=gzxDjnvBDa"
+
+[project.scripts]
+crystalframer-encode = "crystalframer_encoder.cli:main"
+
+[tool.setuptools]
+packages = ["crystalframer_encoder"]
+
+[tool.setuptools.package-data]
+crystalframer_encoder = ["configs/*.json", "configs/*.yaml", "py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | crystalframer_weight
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+addopts = "-v --tb=short"
