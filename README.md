@@ -7,7 +7,7 @@
 
 Crystal structure encoder based on pre-trained CrystalFramer models for materials property prediction and analysis.
 
-<!-- 📚 [日本語ドキュメントはこちら (Japanese Documentation)](README_ja.md) -->
+📚 [日本語ドキュメントはこちら (Japanese Documentation)](README_ja.md)
 
 ## Table of Contents
 

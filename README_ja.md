@@ -1,24 +1,41 @@
 # CrystalFramer Encoder
 
-CrystalFramer Encoderは、事前学習済みのCrystalFramerモデルを結晶構造の埋め込み表現生成に特化したエンコーダとして使用するためのPythonパッケージです。結晶構造を固定次元のベクトル表現に変換し、機械学習タスクや類似性検索に活用できます。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+<!-- [![PyPI version](https://badge.fury.io/py/crystalframer-encoder.svg)](https://badge.fury.io/py/crystalframer-encoder) -->
+[![GitHub](https://img.shields.io/badge/github-crystalframer--encoder-blue)](https://github.com/yourusername/crystalframer-encoder)
+
+材料特性予測と分析のための事前学習済みCrystalFramerモデルに基づく結晶構造エンコーダー。
+
+📚 [English Documentation](README.md)
+
+## 目次
+
+- [クイックスタート](#クイックスタート)
+- [📦 インストール](#-インストール)
+- [🚀 基本的な使用方法](#-基本的な使用方法)
+- [💻 コマンドラインインターフェース](#-コマンドラインインターフェース)
+- [📚 応用例](#-応用例)
+- [📖 APIリファレンス](#-apiリファレンス)
+- [📋 要件](#-要件)
+- [🔧 トラブルシューティング](#-トラブルシューティング)
+- [📝 引用](#-引用)
 
 ## クイックスタート
 
 ```bash
-# Dockerコンテナ内で実行
-docker run --rm --gpus 1 -it -v $(pwd):/workspace -w /workspace crystalframer:latest bash
-cd /workspace/crystalframer-encoder
-pip install -e .
+# gitからインストール
+pip install git+https://github.com/resnant/crystalframer-encoder.git
 ```
+<!--todo: PyPI
+pip install crystalframer-encoder -->
 
 ```python
 import crystalframer_encoder as cfe
 from pymatgen.core import Structure, Lattice
 
-# エンコーダを読み込み
-encoder = cfe.CrystalEncoder.from_pretrained(
-    "/workspace/crystalframer-encoder/crystalframer_weight/formation_energy/best.ckpt"
-)
+# 事前学習済みエンコーダーを読み込み（formation energyモデルを使用）
+encoder = cfe.CrystalEncoder.from_pretrained("./crystalframer_weight/formation_energy/best.ckpt")
 
 # 結晶構造を作成
 lattice = Lattice.cubic(4.0)
@@ -29,33 +46,25 @@ embedding = encoder.encode_single(structure)
 print(f"Embedding shape: {embedding.shape}")  # [1, 128]
 ```
 
-## 特徴
-
-- **簡単な使用**: 数行のコードで結晶構造をエンコード
-- **事前学習済みモデル対応**: CrystalFramerで学習済みのモデルを読み込み可能
-- **ハイパーパラメータ自動読み込み**: hparams.yamlファイルからモデル設定を自動取得
-- **バッチ処理**: 大量の結晶構造を効率的に処理
-- **柔軟な出力**: カスタム埋め込み次元の指定が可能
-
-
-## インストール
+## 📦 インストール
 
 ### PyPIからインストール（推奨）
 
-```bash
+coming soon
+<!-- ```bash
 pip install crystalframer-encoder
-```
+``` -->
 
 ### GitHubから最新版をインストール
 
 ```bash
-pip install git+https://github.com/yourusername/crystalframer-encoder.git
+pip install git+https://github.com/resnant/crystalframer-encoder.git
 ```
 
 ### 開発用インストール
 
 ```bash
-git clone https://github.com/yourusername/crystalframer-encoder.git
+git clone https://github.com/resnant/crystalframer-encoder.git
 cd crystalframer-encoder
 pip install -e .[dev]
 ```
@@ -63,41 +72,39 @@ pip install -e .[dev]
 ### Dockerを使用する場合
 
 ```bash
+# Dockerコンテナをビルド
+docker build -t crystalframer:latest ./docker
+
 # Dockerコンテナを起動
 docker run --rm --gpus 1 -it -v $(pwd):/workspace -w /workspace crystalframer:latest bash
 
 # コンテナ内でパッケージをインストール
-pip install crystalframer-encoder
+pip install git+https://github.com/resnant/crystalframer-encoder.git
 # または開発用
 cd /workspace/crystalframer-encoder
 pip install -e .
 ```
 
 **注意**: CrystalFramerの依存関係（PyTorch, PyTorch Geometric等）が正しくインストールされている必要があります。PyTorch Geometricのインストールについては[公式ドキュメント](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html)を参照してください。
-## 基本的な使用方法
+## 🚀 基本的な使用方法
 
 ### 1. 事前学習済みモデルの使用
 
 ```python
 import crystalframer_encoder as cfe
 
-# 方法1: 付属の事前学習済みモデルを使用（Docker環境）
+# 方法1: チェックポイントファイルから読み込み（デフォルト: formation energyモデル）
+encoder = cfe.CrystalEncoder.from_pretrained("crystalframer_weight/formation_energy/best.ckpt")
+
+# 方法2: hparams.yamlを明示的に指定
 encoder = cfe.CrystalEncoder.from_pretrained(
-    "/workspace/crystalframer-encoder/crystalframer_weight/formation_energy/best.ckpt"
+    "crystalframer_weight/formation_energy/best.ckpt", 
+    hparams_path="crystalframer_weight/formation_energy/hparams.yaml"
 )
 
-# 方法2: 独自のモデルファイルを使用
-encoder = cfe.CrystalEncoder.from_pretrained("/path/to/your/model.ckpt")
-
-# 方法3: hparams.yamlファイルを明示的に指定
+# 方法3: 埋め込み次元を上書き
 encoder = cfe.CrystalEncoder.from_pretrained(
-    "/path/to/model.ckpt", 
-    hparams_path="/path/to/hparams.yaml"
-)
-
-# 方法4: embedding_dimを手動で指定（モデルの設定を上書き）
-encoder = cfe.CrystalEncoder.from_pretrained(
-    "/path/to/model.ckpt", 
+    "crystalframer_weight/formation_energy/best.ckpt", 
     embedding_dim=256
 )
 
@@ -124,10 +131,8 @@ print(f"Embeddings shape: {embeddings.shape}")  # [num_structures, embedding_dim
 2. **独自に学習**: CrystalFramerを使用して独自のデータセットで学習
 
 サンプルの事前学習済みモデル（JARVIS データセット）:
-- Formation Energy予測モデル
-- Optical Bandgap予測モデル
-
-**注意**: 大きなモデルファイル（.ckpt）はGitリポジトリには含まれません。別途ダウンロードするか、CrystalFramerで学習する必要があります。
+- Formation energy予測モデル（`crystalframer_weight/formation_energy/best.ckpt`）
+- Optical bandgap予測モデル（`crystalframer_weight/opt_bandgap/best.ckpt`）
 
 ### 3. ハイパーパラメータファイルについて
 
@@ -143,7 +148,7 @@ CrystalFramer Encoderは以下の場所でハイパーパラメータファイ�
 # ├── best.ckpt
 # └── hparams.yaml  # 自動的に検出される
 
-encoder = cfe.CrystalEncoder.from_pretrained("/path/to/model_directory/best.ckpt")
+encoder = cfe.CrystalEncoder.from_pretrained("model_directory/best.ckpt")
 ```
 
 ### 4. スクラッチからの学習
@@ -162,25 +167,25 @@ optimizer = torch.optim.Adam(encoder.parameters())
 # ... 学習ループ
 ```
 
-## コマンドラインインターフェース
+## 💻 コマンドラインインターフェース
 
 インストール後、`crystalframer-encode`コマンドが使用可能になります：
 
 ```bash
-# 単一構造をエンコード
-crystalframer-encode structure.cif -m model.ckpt -o embeddings.npz
+# 単一構造をエンコード（デフォルトのformation energyモデルを使用）
+crystalframer-encode structure.cif -m crystalframer_weight/formation_energy/best.ckpt -o embeddings.npz
 
 # 複数構造をエンコード
-crystalframer-encode *.cif -m model.ckpt -o embeddings.npz --batch-size 64
+crystalframer-encode *.cif -m crystalframer_weight/formation_energy/best.ckpt -o embeddings.npz --batch-size 64
 
 # 結果をJSON形式で標準出力に表示
-crystalframer-encode structure.cif -m model.ckpt
+crystalframer-encode structure.cif -m crystalframer_weight/formation_energy/best.ckpt
 
 # ヘルプを表示
 crystalframer-encode --help
 ```
 
-## 応用例
+## 📚 応用例
 
 ### 結晶構造の類似度分析
 
@@ -278,7 +283,7 @@ encoder.save_encoder("my_crystal_encoder.pth")
 encoder = cfe.CrystalEncoder.load_encoder("my_crystal_encoder.pth")
 ```
 
-## API リファレンス
+## 📖 APIリファレンス
 
 ### CrystalEncoder
 
@@ -330,7 +335,7 @@ value = params.get('key', default_value)
 params.set('key', value)
 ```
 
-## 要件
+## 📋 要件
 
 - Python >= 3.8
 - PyTorch >= 1.12.0
@@ -339,20 +344,18 @@ params.set('key', value)
 - PyYAML >= 5.4.0
 - その他の依存関係は自動的にインストールされます
 
-## 注意事項
+## ⚠️ 重要な注意事項
 
-1. **Docker環境でのパス**: Dockerコンテナ内では必ず`/workspace/`で始まるパスを使用してください
-2. **メモリ使用量**: 大きな結晶構造や大量のバッチ処理時はメモリ使用量に注意してください
-3. **デバイス管理**: GPUを使用する場合、適切なCUDA環境が必要です
-4. **依存関係**: PyTorch GeometricやPymatgenなど、必要な依存関係が正しくインストールされていることを確認してください
+1. **Dockerパス**: Dockerコンテナ内では常に`/workspace/`で始まるパスを使用してください
+2. **メモリ使用量**: 大きな構造や大量のバッチを処理する際は、メモリ使用量に注意してください
 
-## トラブルシューティング
+## 🔧 トラブルシューティング
 
 ### よくある問題
 
 1. **Docker環境でのパスエラー**
    ```
-   FileNotFoundError: Model '/mnt/data/work/...' not found.
+   FileNotFoundError: Model '/data/work/...' not found.
    ```
    → Docker環境では`/workspace/`で始まるパスを使用してください
 
@@ -377,7 +380,7 @@ params.set('key', value)
 5. **PyTorch Geometricのインポートエラー**
    → CrystalFramerのDockerイメージを使用するか、PyTorch Geometricを正しくインストールしてください
 
-## テスト
+## 🧪 テスト
 
 パッケージが正しく動作することを確認するには：
 
@@ -388,11 +391,11 @@ python test_encoder.py  # 基本的なテストスクリプト
 python -m pytest tests/  # ユニットテスト（pytestが必要）
 ```
 
-## ライセンス
+## 📄 ライセンス
 
-このコードはCrystalFramerプロジェクトと同じライセンスに従います。
+このコードはCrystalFramerプロジェクトと同じライセンス（MITライセンス）に従います。
 
-## 引用
+## 📝 引用
 
 CrystalFramer Encoderを研究で使用する場合は、元のCrystalFramer論文を引用してください：
 
@@ -408,3 +411,12 @@ CrystalFramer Encoderを研究で使用する場合は、元のCrystalFramer論�
   year      = {2025},
   url       = {https://openreview.net/forum?id=gzxDjnvBDa}
 }
+```
+
+## 🤝 貢献
+
+貢献は歓迎します！お気軽にプルリクエストを送信してください。
+
+## 💬 サポート
+
+問題や質問がある場合は、issueを作成してください。
